@@ -1,10 +1,7 @@
 package com.example.parameta.employee.model.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,14 +24,14 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "Document number cannot be empty")
     private String documentNumber;
 
-    @NotBlank(message = "Birth date cannot be empty")
+    @NotNull(message = "Birth date cannot be empty")
     @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent
-    @NotBlank(message = "Hire date cannot be empty")
+    @NotNull(message = "Hire date cannot be empty")
     private Date hireDate;
 
 
