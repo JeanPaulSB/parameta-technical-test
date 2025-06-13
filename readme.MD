@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements:
+The implementation includes:
 
 - A **REST API** that receives employee data, validates it, and calls a SOAP service.
 - A **SOAP Web Service** that stores employee data in a MySQL database.
