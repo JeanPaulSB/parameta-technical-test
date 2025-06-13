@@ -1,5 +1,6 @@
 package com.example.parameta.exception;
 
+import com.example.parameta.exception.custom.DuplicatedException;
 import com.example.parameta.exception.custom.UnderageException;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+
+    /**
+     * Exceptions under the HTTP Response CONFLICT (409).
+     * @param ex Runtime exception.
+     * @return Error message with HttpStatus CONFLICT.
+     */
+    @ExceptionHandler({
+            DuplicatedException.class,
+
+    })
+    public ResponseEntity<Object> handleAlreadyExistsException(RuntimeException ex) {
+        ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 
     /*
      * Overrides the default behaviour for invalid inputs caught by the @Valid

@@ -7,6 +7,7 @@ import com.example.parameta.employee.model.dto.EmployeeRequestDTO;
 import com.example.parameta.employee.model.dto.EmployeeResponseDTO;
 import com.example.parameta.employee.repository.EmployeeRepository;
 import com.example.parameta.employee.service.interfaces.EmployeeService;
+import com.example.parameta.exception.custom.DuplicatedException;
 import com.example.parameta.exception.custom.UnderageException;
 import com.example.parameta.util.DateUtil;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final SoapClient soapClient;
 
 
-
+    /**
+     * Processes employee information, validates age, sends to SOAP service, and returns response DTO
+     * @param employeeRequestDTO the employee information to process
+     * @return EmployeeResponseDTO containing processed employee information
+     * @throws UnderageException if employee is under 18 years old
+     */
     public EmployeeResponseDTO processEmployee(EmployeeRequestDTO employeeRequestDTO){
         if (!this.isAdult(employeeRequestDTO.getBirthDate())) {
             throw new UnderageException("Employee must have at least 18 years old.");
         }
-        // building Employee
+        if(employeeRepository.findByDocumentNumber(employeeRequestDTO.getDocumentNumber()).isPresent()){
+            throw new DuplicatedException("Document number already exists.");
+        };
+        // builds Employee request for SOAP service
         Employee employee = new Employee();
         employee.setName(employeeRequestDTO.getName());
         employee.setDocumentNumber(employeeRequestDTO.getDocumentNumber());
@@ -42,29 +51,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setSalary(employeeRequestDTO.getSalary());
         employee.setBirthDate(DateUtil.toXMLGregorianCalendar(employeeRequestDTO.getBirthDate()));
 
+        // calls SOAP service to store employee
         StoreEmployeeRequest storeEmployeeRequest = new StoreEmployeeRequest();
         storeEmployeeRequest.setEmployee(employee);
-
         soapClient.callSoapService("http://localhost:8080/ws", storeEmployeeRequest);
 
-        DateDetailDTO ageDetailDTO = this.computeAge(employeeRequestDTO.getBirthDate());
-        DateDetailDTO timeInCompany = this.computeTimeInCompany(employeeRequestDTO.getHireDate());
-
-        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
-        employeeResponseDTO.setName(employeeRequestDTO.getName());
-        employeeResponseDTO.setDocumentNumber(employeeRequestDTO.getDocumentNumber());
-        employeeResponseDTO.setDocumentType(employeeRequestDTO.getDocumentType());
-        employeeResponseDTO.setPosition(employeeRequestDTO.getPosition());
-        employeeResponseDTO.setSalary(employeeRequestDTO.getSalary());
-        employeeResponseDTO.setAge(ageDetailDTO);
-        employeeResponseDTO.setTimeInCompany(timeInCompany);
-        employeeResponseDTO.setBirthDate(employeeRequestDTO.getBirthDate());
-        employeeResponseDTO.setHireDate(employeeRequestDTO.getHireDate());
-
-        return employeeResponseDTO;
+        // builds and returns EmployeeResponseDTO
+        return this.buildEmployeeResponseDTO(employeeRequestDTO);
 
     }
 
+    /**
+     * Builds response DTO from request DTO, including age and time in company calculations
+     * @param employee the employee request DTO
+     * @return EmployeeResponseDTO with complete employee information
+     */
+    public EmployeeResponseDTO buildEmployeeResponseDTO(EmployeeRequestDTO employee) {
+        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+        employeeResponseDTO.setName(employee.getName());
+        employeeResponseDTO.setLastName(employee.getLastName());
+        employeeResponseDTO.setDocumentType(employee.getDocumentType());
+        employeeResponseDTO.setDocumentNumber(employee.getDocumentNumber());
+        employeeResponseDTO.setBirthDate(employee.getBirthDate());
+        employeeResponseDTO.setHireDate(employee.getHireDate());
+        employeeResponseDTO.setPosition(employee.getPosition());
+        employeeResponseDTO.setSalary(employee.getSalary());
+        employeeResponseDTO.setAge(computeAge(employee.getBirthDate()));
+        employeeResponseDTO.setTimeInCompany(computeTimeInCompany(employee.getHireDate()));
+        return employeeResponseDTO;
+    }
+
+    /**
+     * Saves employee information from SOAP request to database
+     * @param request the SOAP request containing employee data
+     */
     @Override
     public void saveEmployee(StoreEmployeeRequest request){
         Employee  employee = request.getEmployee();
@@ -80,7 +100,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employeeEntity);
     }
 
-
+    /**
+     * Calculates age from birth date
+     * @param birthDate the date of birth
+     * @return DateDetailDTO containing years, months, and days
+     */
     @Override
     public DateDetailDTO computeAge(Date birthDate) {
         LocalDate localDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -89,6 +113,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new DateDetailDTO(period.getYears(), period.getMonths(), period.getDays());
     }
 
+    /**
+     * Calculates time worked in company from hire date
+     * @param hireDate the date of hire
+     * @return DateDetailDTO containing years, months, and days
+     */
     @Override
     public DateDetailDTO computeTimeInCompany(Date hireDate) {
         LocalDate localDate = hireDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -97,6 +126,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new DateDetailDTO(period.getYears(), period.getMonths(), period.getDays());
     }
 
+    /**
+     * Checks if person is at least 18 years old
+     * @param birthDate the date of birth to check
+     * @return true if 18 or older, false otherwise
+     */
     @Override
     public boolean isAdult(Date birthDate) {
         Calendar today = Calendar.getInstance();

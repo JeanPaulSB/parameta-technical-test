@@ -28,7 +28,7 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<?> getEmployeeInfo(@Valid @ModelAttribute EmployeeRequestDTO employeeRequestDTO) {
         EmployeeResponseDTO employeeResponseDTO = employeeService.processEmployee(employeeRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(employeeResponseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeResponseDTO);
     }
 
 }
