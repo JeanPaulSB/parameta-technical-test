@@ -35,13 +35,19 @@ src/
   main/
     java/
       com/example/parameta/employee/
+        client/         # SOAP consumer configuration
         config/         # Spring and SOAP configuration
         controller/     # REST controllers
         endpoint/       # SOAP endpoints
         model/          # Entity and DTOs
         repository/     # Spring Data JPA repositories
         service/        # Business logic
-        generated/      # JAXB generated classes
+      com/example/parameta/exception/
+        custom/         # Custom exception handler
+        ErrorResponse.java
+        GlobalExceptionHandler.java
+      com/example/parameta/util/
+        DateUtil.java   # Utility methods to convert from XMLGregorianCalendar to Date and viceversa.
     resources/
       employee.xsd      # XSD schema for SOAP service
       application.properties
@@ -56,7 +62,6 @@ pom.xml
 - JDK 21
 - Maven 3.8+
 - MySQL 8.0
-- Your favorite IDE (VS Code, IntelliJ, Eclipse)
 
 ## REST API Endpoints
 
@@ -204,3 +209,7 @@ The API returns appropriate HTTP status codes:
 - 400: Bad Request (validation errors)
 - 404: Not Found
 - 500: Internal Server Error
+
+# Author
+
+Jean Paul Sierra Boom

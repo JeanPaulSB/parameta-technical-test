@@ -1,4 +1,6 @@
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/ParametaApplication.java
+/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/client/SoapClient.java
+/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/client/SoapClientConfig.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/config/WebServiceConfig.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/controller/EmployeeController.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/endpoint/EmployeeEndpoint.java
@@ -7,10 +9,11 @@
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/model/dto/EmployeeResponseDTO.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/model/entity/Employee.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/repository/EmployeeRepository.java
-/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/service/rest/implementation/EmployeeServiceImpl.java
-/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/service/rest/interfaces/EmployeeService.java
+/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/service/implementation/EmployeeServiceImpl.java
+/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/employee/service/interfaces/EmployeeService.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/exception/ErrorResponse.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/exception/GlobalExceptionHandler.java
+/Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/exception/custom/DuplicatedException.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/exception/custom/UnderageException.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/src/main/java/com/example/parameta/util/DateUtil.java
 /Users/jeansierraboom/Downloads/parameta-technical-test/target/generated-sources/jaxb/com/example/employee/Employee.java
