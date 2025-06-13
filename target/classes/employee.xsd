@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://example.com/employee"
+           targetNamespace="http://example.com/employee"
+           elementFormDefault="qualified">
+
+    <xs:element name="StoreEmployeeRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="employee" type="tns:employee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="StoreEmployeeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="employee">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="documentType" type="xs:string"/>
+            <xs:element name="documentNumber" type="xs:string"/>
+            <xs:element name="birthDate" type="xs:date"/>
+            <xs:element name="hireDate" type="xs:date"/>
+            <xs:element name="position" type="xs:string"/>
+            <xs:element name="salary" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

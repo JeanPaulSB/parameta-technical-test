@@ -1,9 +1,14 @@
 package com.example.parameta.employee.controller;
 
+import com.example.employee.StoreEmployeeRequest;
+import com.example.employee.Employee;
+import com.example.parameta.employee.client.SoapClient;
 import com.example.parameta.employee.model.dto.DateDetailDTO;
 import com.example.parameta.employee.model.dto.EmployeeRequestDTO;
-import com.example.parameta.employee.service.rest.interfaces.EmployeeService;
+import com.example.parameta.employee.model.dto.EmployeeResponseDTO;
+import com.example.parameta.employee.service.interfaces.EmployeeService;
 import com.example.parameta.exception.custom.UnderageException;
+import com.example.parameta.util.DateUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,13 +27,8 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<?> getEmployeeInfo(@Valid @ModelAttribute EmployeeRequestDTO employeeRequestDTO) {
-        if (!employeeService.isAdult(employeeRequestDTO.getBirthDate())) {
-            throw new UnderageException("Employee must have at least 18 years old.");
-        }
-
-        DateDetailDTO dateDetailDTO = employeeService.computeAge(employeeRequestDTO.getBirthDate());
-
-        return ResponseEntity.status(HttpStatus.OK).body(dateDetailDTO.getDays());
+        EmployeeResponseDTO employeeResponseDTO = employeeService.processEmployee(employeeRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(employeeResponseDTO);
     }
 
 }
